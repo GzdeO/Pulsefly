@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/musicListFragment">
+
+    <fragment
+        android:id="@+id/musicListFragment"
+        android:name="com.ktln.kotlinpulse.fragments.MusicListFragment"
+        android:label="fragment_music_list"
+        tools:layout="@layout/fragment_music_list" >
+        <action
+            android:id="@+id/action_musicListFragment_to_musicDetailFragment"
+            app:destination="@id/musicDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/musicDetailFragment"
+        android:name="com.ktln.kotlinpulse.fragments.MusicDetailFragment"
+        android:label="fragment_music_detail"
+        tools:layout="@layout/fragment_music_detail" >
+        <action
+            android:id="@+id/action_musicDetailFragment_to_musicListFragment"
+            app:destination="@id/musicListFragment" />
+        <argument
+            android:name="artistId"
+            app:argType="integer"
+            />
+    </fragment>
+</navigation>

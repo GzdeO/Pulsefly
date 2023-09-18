@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">KotlinPulse</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="album_name">Album Name</string>
+    <string name="tab_layout">tab layout</string>
+    <string name="top">Top</string>
+</resources>
