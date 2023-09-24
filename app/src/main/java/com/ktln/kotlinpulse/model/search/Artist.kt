@@ -1,4 +1,4 @@
-package com.ktln.kotlinpulse.model.chartAlbums
+package com.ktln.kotlinpulse.model.search
 
 
 import com.google.gson.annotations.SerializedName
@@ -20,8 +20,6 @@ data class Artist(
     val pictureSmall: String,
     @SerializedName("picture_xl")
     val pictureXl: String,
-    @SerializedName("radio")
-    val radio: Boolean,
     @SerializedName("tracklist")
     val tracklist: String,
     @SerializedName("type")

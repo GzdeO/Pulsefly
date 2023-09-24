@@ -1,6 +1,5 @@
 package com.ktln.kotlinpulse.fragments
 
-import android.animation.ObjectAnimator
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -9,24 +8,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.ktln.kotlinpulse.databinding.FragmentMusicDetailBinding
+import androidx.navigation.Navigation
+import com.ktln.kotlinpulse.R
+import com.ktln.kotlinpulse.databinding.FragmentMusicListBinding
+import com.ktln.kotlinpulse.databinding.FragmentTrackDetailBinding
 import com.ktln.kotlinpulse.utils.downloadImg
-import com.ktln.kotlinpulse.viewModel.MusicDetailViewModel
+import com.ktln.kotlinpulse.viewModel.TrackDetailViewModel
 
+class TrackDetailFragment : Fragment() {
 
-class MusicDetailFragment : Fragment() {
-
-    private lateinit var binding: FragmentMusicDetailBinding
+    private lateinit var binding: FragmentTrackDetailBinding
 
     private var mediaPlayer: MediaPlayer? = null
 
-    private lateinit var rotationAnimator: ObjectAnimator
+    private lateinit var trackDetailViewModel: TrackDetailViewModel
 
-    private lateinit var viewModel:MusicDetailViewModel
-    private var artistId=96078
+    private var trackId=0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,45 +37,39 @@ class MusicDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMusicDetailBinding.inflate(inflater, container, false)
+        binding = FragmentTrackDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         arguments?.let {
-            artistId= MusicDetailFragmentArgs.fromBundle(it).artistId
-            println("music Id: $artistId")
+            trackId=TrackDetailFragmentArgs.fromBundle(it).trackId
+            println("track Id: $trackId")
         }
 
-        viewModel=ViewModelProvider(this)[MusicDetailViewModel::class.java]
-        viewModel.roomVerisiniAl(artistId)
+        trackDetailViewModel=ViewModelProvider(this)[TrackDetailViewModel::class.java]
+        trackDetailViewModel.roomVerisiniAl(trackId)
 
 
 
-        observeLiveData()
 
-
-
+        observeTrackDetailLiveData()
+        binding.pulseAnimation.pauseAnimation()
 
     }
 
-    fun observeLiveData(){
-        viewModel.musicDetailLiveData.observe(viewLifecycleOwner, Observer { music->
-            music?.let {
+    fun observeTrackDetailLiveData(){
+        trackDetailViewModel.trackDetailLiveData.observe(viewLifecycleOwner, Observer {track->
+            track?.let {
                 binding.apply {
-                    albumName.text=music.album.title
-                    artistName.text=music.artist.name
-                    songName.text=music.title
+                    songName.text=track.title
+                    albumName.text=track.album.title
+                    artistName.text=track.artist.name
 
-                    albumImg.downloadImg(music.album.coverMedium)
-
-                    rotationAnimator = ObjectAnimator.ofFloat(albumImgCardContainer, "rotation", 0f, 360f)
-                    rotationAnimator.repeatCount = ObjectAnimator.INFINITE
-                    rotationAnimator.duration = 5000 // Bir dönüş için geçen süre (milisaniye)
-                    rotationAnimator.interpolator = LinearInterpolator()
+                    binding.albumImg.downloadImg(track.album.coverMedium)
 
 
                     mediaPlayer = MediaPlayer().apply {
@@ -86,17 +79,15 @@ class MusicDetailFragment : Fragment() {
                                 .build()
                         )
 
-                        setDataSource(music.preview)
+                        setDataSource(track.preview)
                         prepare()
-
                     }
 
                     playButton.setOnClickListener {
                         playButton.visibility=View.GONE
                         pauseButton.visibility=View.VISIBLE
                         mediaPlayer?.start()
-                        rotationAnimator.start()
-
+                        startAnimation()
                     }
 
 
@@ -104,18 +95,14 @@ class MusicDetailFragment : Fragment() {
                         pauseButton.visibility=View.GONE
                         playButton.visibility=View.VISIBLE
                         mediaPlayer?.pause()
-                        rotationAnimator.pause()
+                        stopAnimation()
                     }
 
 
                     mediaPlayer?.setOnCompletionListener {
-
                         Handler().postDelayed({
-                            rotationAnimator.end()
-                        }, music.duration.toLong())
-
-                        rotationAnimator.end()
-                        albumImgCardContainer.rotation = 0f
+                            stopAnimation()
+                        }, track.duration.toLong())
 
                         binding.pauseButton.visibility = View.GONE
                         binding.playButton.visibility = View.VISIBLE
@@ -125,7 +112,7 @@ class MusicDetailFragment : Fragment() {
                     forwardButton.setOnClickListener {
                         val currentPosition = mediaPlayer?.currentPosition ?: 0
                         val duration = mediaPlayer?.duration ?: 0
-                        val forwardTime = 10000 // İleri sar 10 saniye (örnek olarak)
+                        val forwardTime = 10000
                         val newPosition = currentPosition + forwardTime
                         if (newPosition < duration) {
                             mediaPlayer?.seekTo(newPosition)
@@ -133,9 +120,10 @@ class MusicDetailFragment : Fragment() {
                     }
 
 
+
                     rewindButton.setOnClickListener {
                         val currentPosition = mediaPlayer?.currentPosition ?: 0
-                        val rewindTime = 10000 // Geri sar 10 saniye (örnek olarak)
+                        val rewindTime = 10000
                         val newPosition = currentPosition - rewindTime
                         if (newPosition >= 0) {
                             mediaPlayer?.seekTo(newPosition)
@@ -143,23 +131,28 @@ class MusicDetailFragment : Fragment() {
                             mediaPlayer?.seekTo(0)
                         }
                     }
-                }
 
+
+
+
+                }
             }
         })
-
     }
 
 
+    private fun startAnimation() {
+        binding.pulseAnimation.playAnimation()
+    }
 
+    private fun stopAnimation() {
+        binding.pulseAnimation.pauseAnimation()
+        binding.pulseAnimation.progress = 0f
+    }
 
     override fun onDestroy() {
-        super.onDestroy()
-        rotationAnimator.end()
-        mediaPlayer?.stop()
         mediaPlayer?.release()
-
+        mediaPlayer = null
+        super.onDestroy()
     }
-
-
 }

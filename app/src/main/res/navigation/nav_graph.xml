@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_musicListFragment_to_musicDetailFragment"
             app:destination="@id/musicDetailFragment" />
+        <action
+            android:id="@+id/action_musicListFragment_to_trackDetailFragment"
+            app:destination="@id/trackDetailFragment" />
+        <action
+            android:id="@+id/action_musicListFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/musicDetailFragment"
@@ -26,5 +32,37 @@
             android:name="artistId"
             app:argType="integer"
             />
+    </fragment>
+    <fragment
+        android:id="@+id/trackDetailFragment"
+        android:name="com.ktln.kotlinpulse.fragments.TrackDetailFragment"
+        android:label="fragment_track_detail"
+        tools:layout="@layout/fragment_track_detail" >
+        <action
+            android:id="@+id/action_trackDetailFragment_to_musicListFragment"
+            app:destination="@id/musicListFragment" />
+        <argument
+            android:name="trackId"
+            app:argType="integer"
+             />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.ktln.kotlinpulse.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_searchDetailFragment"
+            app:destination="@id/searchDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchDetailFragment"
+        android:name="com.ktln.kotlinpulse.fragments.SearchDetailFragment"
+        android:label="fragment_search_detail"
+        tools:layout="@layout/fragment_search_detail" >
+        <argument
+            android:name="searchId"
+            app:argType="integer"
+             />
     </fragment>
 </navigation>

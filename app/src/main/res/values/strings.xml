@@ -5,4 +5,5 @@
     <string name="album_name">Album Name</string>
     <string name="tab_layout">tab layout</string>
     <string name="top">Top</string>
+    <string name="search">Search...</string>
 </resources>

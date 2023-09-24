@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/bgColor">
 
 
     <fragment
@@ -19,5 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph" />
+        app:navGraph="@navigation/nav_graph"
+        android:layout_marginTop="20dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

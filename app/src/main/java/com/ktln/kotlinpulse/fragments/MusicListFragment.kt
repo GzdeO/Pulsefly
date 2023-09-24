@@ -7,10 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ktln.kotlinpulse.R
 import com.ktln.kotlinpulse.adapter.MusicRecyclerAdapter
+import com.ktln.kotlinpulse.adapter.TracksRecyclerAdapter
 import com.ktln.kotlinpulse.databinding.FragmentMusicListBinding
 import com.ktln.kotlinpulse.viewModel.MusicListViewModel
+import com.ktln.kotlinpulse.viewModel.TracksListViewModel
 
 
 class MusicListFragment : Fragment() {
@@ -19,20 +24,16 @@ class MusicListFragment : Fragment() {
     private lateinit var viewModel: MusicListViewModel
     private val recyclerMusicAdapter = MusicRecyclerAdapter(arrayListOf())
 
+    private lateinit var tracksListViewModel : TracksListViewModel
+    private val tracksRecyclerAdapter=TracksRecyclerAdapter(arrayListOf())
 
 
-    private var artistId = 96078
 
-
-
+    private var artistId = 4011
+    private var trackId="0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
-
-
 
     }
 
@@ -41,11 +42,14 @@ class MusicListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMusicListBinding.inflate(inflater, container, false)
+
+
         return binding.root
 
 
-    }
 
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,40 +57,60 @@ class MusicListFragment : Fragment() {
         viewModel=ViewModelProvider(this)[MusicListViewModel::class.java]
         viewModel.refreshData(artistId)
 
+
         binding.apply {
-            topAlbumsRV.layoutManager= LinearLayoutManager(context)
+            topAlbumsRV.layoutManager=LinearLayoutManager(context)
             topAlbumsRV.adapter=recyclerMusicAdapter
             topAlbumsRV.set3DItem(true)
             topAlbumsRV.setInfinite(true)
         }
+
+
+        tracksListViewModel=ViewModelProvider(this)[TracksListViewModel::class.java]
+        tracksListViewModel.refreshTrackData(trackId)
+
+        binding.apply {
+            tracksRV.layoutManager=LinearLayoutManager(context)
+            tracksRV.adapter=tracksRecyclerAdapter
+        }
+
+
+
+
 
         binding.apply {
             swipeRefreshLayout.setOnRefreshListener {
                 prgBarPulse.visibility=View.VISIBLE
                 errorAnimation.visibility=View.GONE
                 topAlbumsRV.visibility=View.GONE
+                tracksRV.visibility=View.GONE
                 viewModel.refreshFromInternet(artistId)
+                tracksListViewModel.refreshFromInternet(trackId)
                 swipeRefreshLayout.isRefreshing=false
             }
         }
 
-
-
         observeLiveData()
+        observeTrackLiveData()
 
-
-
-
+        binding.searchIcon.setOnClickListener {
+            findNavController().navigate(R.id.action_musicListFragment_to_searchFragment)
+        }
 
     }
+
+
 
 
 
     fun observeLiveData(){
         viewModel.musics.observe(viewLifecycleOwner, Observer {music->
             music?.let {
-                binding.topAlbumsRV.visibility=View.VISIBLE
-                binding.lineAnimation.visibility=View.VISIBLE
+                binding.apply {
+                    topAlbumsRV.visibility=View.VISIBLE
+                    tracksRV.visibility=View.VISIBLE
+                    lineAnimation.visibility=View.VISIBLE
+                }
                 recyclerMusicAdapter.musicListesiniGuncelle(music)
             }
         })
@@ -94,10 +118,13 @@ class MusicListFragment : Fragment() {
         viewModel.musicLoading.observe(viewLifecycleOwner, Observer {loading->
             loading?.let {
                 if (it){
-                    binding.prgBarPulse.visibility=View.VISIBLE
-                    binding.errorAnimation.visibility=View.GONE
-                    binding.topAlbumsRV.visibility=View.GONE
-                    binding.lineAnimation.visibility=View.GONE
+                    binding.apply {
+                        prgBarPulse.visibility=View.VISIBLE
+                        errorAnimation.visibility=View.GONE
+                        topAlbumsRV.visibility=View.GONE
+                        lineAnimation.visibility=View.GONE
+                        tracksRV.visibility=View.GONE
+                    }
                 }else{
                     binding.prgBarPulse.visibility=View.GONE
                 }
@@ -107,13 +134,68 @@ class MusicListFragment : Fragment() {
         viewModel.musicError.observe(viewLifecycleOwner, Observer {error->
             error?.let {
                 if (it){
-                    binding.errorAnimation.visibility=View.VISIBLE
-                    binding.topAlbumsRV.visibility=View.GONE
-                    binding.lineAnimation.visibility=View.GONE
+                    binding.apply {
+                        errorAnimation.visibility=View.VISIBLE
+                        prgBarPulse.visibility=View.GONE
+                        topAlbumsRV.visibility=View.GONE
+                        lineAnimation.visibility=View.GONE
+                        tracksRV.visibility=View.GONE
+                    }
                 }else{
                     binding.errorAnimation.visibility=View.GONE
                 }
             }
         })
     }
+
+
+    private fun observeTrackLiveData() {
+        tracksListViewModel.tracks.observe(viewLifecycleOwner, Observer { tracks->
+            tracks?.let {
+
+               binding.apply {
+                   tracksRV.visibility=View.VISIBLE
+                   topAlbumsRV.visibility=View.VISIBLE
+                   lineAnimation.visibility=View.VISIBLE
+               }
+                tracksRecyclerAdapter.trackListesiniGuncelle(tracks)
+            }
+
+        })
+
+        tracksListViewModel.trackError.observe(viewLifecycleOwner, Observer { error->
+            error?.let {
+                if (it){
+                    binding.apply {
+                        errorAnimation.visibility=View.VISIBLE
+                        prgBarPulse.visibility=View.GONE
+                        topAlbumsRV.visibility=View.GONE
+                        lineAnimation.visibility=View.GONE
+                        tracksRV.visibility=View.GONE
+
+                    }
+                }else{
+                    binding.errorAnimation.visibility=View.GONE
+                }
+            }
+        })
+
+        tracksListViewModel.trackLoading.observe(viewLifecycleOwner, Observer { loading->
+            loading?.let {
+                if (it){
+                    binding.apply {
+                        prgBarPulse.visibility=View.VISIBLE
+                        errorAnimation.visibility=View.GONE
+                        topAlbumsRV.visibility=View.GONE
+                        lineAnimation.visibility=View.GONE
+                        tracksRV.visibility=View.GONE
+                    }
+                }else{
+                    binding.prgBarPulse.visibility=View.GONE
+                }
+            }
+        })
+    }
+
 }
+

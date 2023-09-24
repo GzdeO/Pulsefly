@@ -4,31 +4,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.MusicDetailFragment"
+    tools:context=".fragments.SearchDetailFragment"
     android:background="@color/bgColor">
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/pulseAnimation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:lottie_rawRes="@raw/pulse"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/informationContainer"/>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/albumImgCardContainer"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
         android:layout_marginBottom="20dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toTopOf="@+id/informationContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         app:strokeColor="@color/white"
         app:strokeWidth="5dp">
 
         <ImageView
             android:id="@+id/albumImg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="210dp"
+            android:layout_height="210dp"
             android:scaleType="fitXY"
             android:background="@color/white"
-            android:src="@drawable/music" />
+            android:src="@drawable/music"
+            android:layout_gravity="center"/>
+
+
     </com.google.android.material.card.MaterialCardView>
 
 
@@ -42,53 +56,53 @@
         app:layout_constraintBottom_toTopOf="@+id/playerButtonsContainer"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/albumName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:gravity="center"/>
+        <TextView
+            android:id="@+id/albumName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:gravity="center"/>
 
 
 
 
-    <TextView
-        android:id="@+id/artistName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="23sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/albumName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        />
+        <TextView
+            android:id="@+id/artistName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/albumName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            />
 
 
-    <TextView
-        android:id="@+id/songName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/artistName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        />
+        <TextView
+            android:id="@+id/songName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/artistName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -101,8 +115,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/informationContainer"
-        app:layout_constraintVertical_bias="0.75">
+        app:layout_constraintTop_toBottomOf="@+id/informationContainer">
 
         <ImageView
             android:id="@+id/playButton"
@@ -156,11 +169,6 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

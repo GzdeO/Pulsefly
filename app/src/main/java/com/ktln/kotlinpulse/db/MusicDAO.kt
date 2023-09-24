@@ -20,4 +20,6 @@ interface MusicDAO {
 
     @Query("DELETE FROM data")
     suspend fun deleteAllMusic()
+
+
 }

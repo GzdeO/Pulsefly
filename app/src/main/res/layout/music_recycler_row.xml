@@ -40,7 +40,7 @@
                     android:id="@+id/albumName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/album_name"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="bold"

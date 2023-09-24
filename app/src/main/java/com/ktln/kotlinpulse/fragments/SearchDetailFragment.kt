@@ -1,6 +1,5 @@
 package com.ktln.kotlinpulse.fragments
 
-import android.animation.ObjectAnimator
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -9,25 +8,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.ktln.kotlinpulse.databinding.FragmentMusicDetailBinding
+import com.ktln.kotlinpulse.databinding.FragmentSearchDetailBinding
 import com.ktln.kotlinpulse.utils.downloadImg
-import com.ktln.kotlinpulse.viewModel.MusicDetailViewModel
+import com.ktln.kotlinpulse.viewModel.SearchDetailViewModel
 
 
-class MusicDetailFragment : Fragment() {
+class SearchDetailFragment : Fragment() {
 
-    private lateinit var binding: FragmentMusicDetailBinding
+    private lateinit var binding: FragmentSearchDetailBinding
+    private lateinit var searchDetailViewModel : SearchDetailViewModel
+
 
     private var mediaPlayer: MediaPlayer? = null
 
-    private lateinit var rotationAnimator: ObjectAnimator
 
-    private lateinit var viewModel:MusicDetailViewModel
-    private var artistId=96078
 
+    private var searchId=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,46 +38,34 @@ class MusicDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMusicDetailBinding.inflate(inflater, container, false)
+        binding = FragmentSearchDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         arguments?.let {
-            artistId= MusicDetailFragmentArgs.fromBundle(it).artistId
-            println("music Id: $artistId")
+            searchId=SearchDetailFragmentArgs.fromBundle(it).searchId
+            println("search Id: $searchId")
         }
 
-        viewModel=ViewModelProvider(this)[MusicDetailViewModel::class.java]
-        viewModel.roomVerisiniAl(artistId)
+        searchDetailViewModel=ViewModelProvider(this)[SearchDetailViewModel::class.java]
+        searchDetailViewModel.roomVerisiniAl(searchId)
 
+        observeSearchDetailLiveData()
 
-
-        observeLiveData()
-
-
-
-
+        binding.pulseAnimation.pauseAnimation()
     }
 
-    fun observeLiveData(){
-        viewModel.musicDetailLiveData.observe(viewLifecycleOwner, Observer { music->
-            music?.let {
+
+    fun observeSearchDetailLiveData(){
+        searchDetailViewModel.searchLiveData.observe(viewLifecycleOwner, Observer {search->
+            search?.let {
                 binding.apply {
-                    albumName.text=music.album.title
-                    artistName.text=music.artist.name
-                    songName.text=music.title
-
-                    albumImg.downloadImg(music.album.coverMedium)
-
-                    rotationAnimator = ObjectAnimator.ofFloat(albumImgCardContainer, "rotation", 0f, 360f)
-                    rotationAnimator.repeatCount = ObjectAnimator.INFINITE
-                    rotationAnimator.duration = 5000 // Bir dönüş için geçen süre (milisaniye)
-                    rotationAnimator.interpolator = LinearInterpolator()
-
+                    albumName.text=search.album.title
+                    artistName.text=search.artist.name
+                    songName.text=search.title
+                    albumImg.downloadImg(search.album.coverMedium)
 
                     mediaPlayer = MediaPlayer().apply {
                         setAudioAttributes(
@@ -86,7 +74,7 @@ class MusicDetailFragment : Fragment() {
                                 .build()
                         )
 
-                        setDataSource(music.preview)
+                        setDataSource(search.preview)
                         prepare()
 
                     }
@@ -95,30 +83,24 @@ class MusicDetailFragment : Fragment() {
                         playButton.visibility=View.GONE
                         pauseButton.visibility=View.VISIBLE
                         mediaPlayer?.start()
-                        rotationAnimator.start()
+                        startAnimation()
 
                     }
-
 
                     pauseButton.setOnClickListener {
                         pauseButton.visibility=View.GONE
                         playButton.visibility=View.VISIBLE
                         mediaPlayer?.pause()
-                        rotationAnimator.pause()
+                        stopAnimation()
+
                     }
 
-
                     mediaPlayer?.setOnCompletionListener {
-
                         Handler().postDelayed({
-                            rotationAnimator.end()
-                        }, music.duration.toLong())
-
-                        rotationAnimator.end()
-                        albumImgCardContainer.rotation = 0f
-
-                        binding.pauseButton.visibility = View.GONE
-                        binding.playButton.visibility = View.VISIBLE
+                            stopAnimation()
+                        }, search.duration.toLong())
+                        pauseButton.visibility = View.GONE
+                        playButton.visibility = View.VISIBLE
                     }
 
 
@@ -143,19 +125,26 @@ class MusicDetailFragment : Fragment() {
                             mediaPlayer?.seekTo(0)
                         }
                     }
+
+
                 }
 
             }
         })
-
     }
 
+    private fun startAnimation() {
+        binding.pulseAnimation.playAnimation()
+    }
 
+    private fun stopAnimation() {
+        binding.pulseAnimation.pauseAnimation()
+        binding.pulseAnimation.progress = 0f
+    }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        rotationAnimator.end()
         mediaPlayer?.stop()
         mediaPlayer?.release()
 

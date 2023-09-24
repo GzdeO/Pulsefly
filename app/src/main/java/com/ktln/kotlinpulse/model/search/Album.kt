@@ -1,11 +1,9 @@
-package com.ktln.kotlinpulse.model.chartAlbums
+package com.ktln.kotlinpulse.model.search
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Data(
-    @SerializedName("artist")
-    val artist: Artist,
+data class Album(
     @SerializedName("cover")
     val cover: String,
     @SerializedName("cover_big")
@@ -16,18 +14,10 @@ data class Data(
     val coverSmall: String,
     @SerializedName("cover_xl")
     val coverXl: String,
-    @SerializedName("explicit_lyrics")
-    val explicitLyrics: Boolean,
     @SerializedName("id")
     val id: Int,
-    @SerializedName("link")
-    val link: String,
     @SerializedName("md5_image")
     val md5İmage: String,
-    @SerializedName("position")
-    val position: Int,
-    @SerializedName("record_type")
-    val recordType: String,
     @SerializedName("title")
     val title: String,
     @SerializedName("tracklist")

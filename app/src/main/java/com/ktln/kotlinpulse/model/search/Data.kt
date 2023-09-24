@@ -1,4 +1,4 @@
-package com.ktln.kotlinpulse.model.chartTracks
+package com.ktln.kotlinpulse.model.search
 
 
 import androidx.room.ColumnInfo
@@ -6,12 +6,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
-import com.ktln.kotlinpulse.db.AlbumTypeConverter
-import com.ktln.kotlinpulse.db.TracksConverters
-
+import com.ktln.kotlinpulse.db.SearchArtistTypeConverter
+import com.ktln.kotlinpulse.db.SearchTypeConverter
 
 @Entity
-@TypeConverters(TracksConverters::class, AlbumTypeConverter::class)
+@TypeConverters(SearchTypeConverter::class, SearchArtistTypeConverter::class)
 data class Data(
     @ColumnInfo(name = "album")
     @SerializedName("album")
@@ -49,10 +48,6 @@ data class Data(
     @SerializedName("md5_image")
     val md5İmage: String,
 
-    @ColumnInfo(name = "position")
-    @SerializedName("position")
-    val position: Int,
-
     @ColumnInfo(name = "preview")
     @SerializedName("preview")
     val preview: String,
@@ -60,6 +55,10 @@ data class Data(
     @ColumnInfo(name = "rank")
     @SerializedName("rank")
     val rank: Int,
+
+    @ColumnInfo(name = "readable")
+    @SerializedName("readable")
+    val readable: Boolean,
 
     @ColumnInfo(name = "title")
     @SerializedName("title")
@@ -71,11 +70,11 @@ data class Data(
 
     @ColumnInfo(name = "title_version")
     @SerializedName("title_version")
-    val titleVersion: String,
+    val titleVersion: String?,
 
     @ColumnInfo(name = "type")
     @SerializedName("type")
-    val type: String
+    val type: String?
 ){
     @PrimaryKey(autoGenerate = true)
     var uuid : Int =0

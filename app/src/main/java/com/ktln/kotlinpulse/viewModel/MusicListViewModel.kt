@@ -20,6 +20,8 @@ class MusicListViewModel(application: Application):BaseViewModel(application) {
     val musicError=MutableLiveData<Boolean>()
     val musicLoading=MutableLiveData<Boolean>()
 
+
+
     private var guncellemeZamani=10 * 60 * 1000 * 1000 * 1000L
 
     private val musicAPIService = MusicAPIService()
@@ -50,7 +52,7 @@ class MusicListViewModel(application: Application):BaseViewModel(application) {
         launch {
             val musicList=MusicDatabase(getApplication()).musicDAO().getAllMusic()
             musicleriGöster(musicList)
-            Toast.makeText(getApplication(),"Müzikler Roomdan alındı.",Toast.LENGTH_LONG).show()
+
         }
     }
 
@@ -64,7 +66,7 @@ class MusicListViewModel(application: Application):BaseViewModel(application) {
                 .subscribeWith(object : DisposableSingleObserver<MusicResponse>(){
                     override fun onSuccess(value: MusicResponse) {
                             sqliteSakla(value.data)
-                        Toast.makeText(getApplication(),"Müzikler İnternetten alındı.",Toast.LENGTH_LONG).show()
+
 
                     }
 

@@ -4,34 +4,30 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.ktln.kotlinpulse.model.Data
+import com.ktln.kotlinpulse.model.search.Data
 
 
-@Database(entities = [Data::class], version = 1, exportSchema = false)
-abstract class MusicDatabase : RoomDatabase() {
+@Database(entities = arrayOf(Data::class), version = 2, exportSchema = false)
+abstract class SearchDatabase : RoomDatabase() {
 
-    abstract fun musicDAO (): MusicDAO
-
+    abstract fun searchDao() : SearchDAO
 
     companion object{
 
-        @Volatile private var instance: MusicDatabase?=null
+        @Volatile private var instance : SearchDatabase?=null
 
         private val lock = Any()
 
         operator fun invoke(context: Context) = instance ?: synchronized(lock){
             instance ?: databaseOlustur(context).also {
-                instance=it
+                instance = it
             }
         }
 
-
         private fun databaseOlustur(context: Context) = Room.databaseBuilder(
             context.applicationContext,
-            MusicDatabase::class.java,
-            "music_db").build()
+            SearchDatabase::class.java,
+            "searchdatabase").build()
     }
-
-
 
 }
