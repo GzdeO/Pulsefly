@@ -1,4 +1,4 @@
-🎵 Hey everyone! I'm thrilled to announce the launch of my latest project - an incredible music player app in Kotlin that guarantees a one-of-a-kind, immersive musical experience! 🚀
+🎵 Hey everyone! I am happy to share my latest project with you. An incredible music player app that guarantees an immersive music experience in Kotlin! 🚀
 
 With the power of Deezer API data, this app elevates the joy of music by allowing you to discover and groove to your favorite tunes. 🎧
 
