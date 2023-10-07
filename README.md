@@ -22,8 +22,12 @@ And always remember, the rhythm is with you! 🎶
 #MusicPlayer #Kotlin #AndroidDev
 
 
+https://github.com/GzdeO/Pulsefly/assets/137268577/5ec8ee11-ca14-414b-8eda-7ee47637adfb
 
-https://github.com/GzdeO/Pulsefly/assets/137268577/29cd7e19-8589-4416-b1f9-58a6eaa8f7fb
+
+
+
+
 
 
 
